@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheet.css" />
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+    
+    <title>radeln</title>
+</head>
+<body>
+
+    <div id="tagesdaten"> <p class="pnormal">Tagesdaten</p></div>
+    
+    <div  id="buttonsContainer"></div>
+   
+   
+    <!-- Container for details/summary -->
+    <div id="featureListContainer" ></div>
+
+    <div id="mapueber">
+        <div id="mapunter"></div>
+    </div>
+
+    <div id="routeData" class="pnormal">
+        <ul id="featureList"></ul>
+        <div id="map"></div>
+    </div>
+   
+    
+ 
+    <div id="sortButtons">
+      
+       <div class="aboutinline" >
+        <button class="pbutton" id="sortByName1" onclick="toggleActiveState('sortByName1')">Weghinweis</button>
+        <button class="pbutton" id="sortByName2" onclick="toggleActiveState('sortByName2')">Nicht allein auf der Straße</button>
+        <button class="pbutton" id="sortByName3" onclick="toggleActiveState('sortByName3')">Spezial</button>
+        <button class="pbutton" id="showAllMarkers" onclick="toggleActiveState('showAllMarkers')">Alle</button>
+        <button class="pbutton" id="hideAllMarkers" onclick="toggleActiveState('hideAllMarkers')">Keine</button>
+    </div>
+
+        
+    </div>
+    
+    <div id="about" >
+        <p class="fettbutton" onclick="toggleActiveState('about')">About</p><p class="fettbutton rechterstop" onclick="toggleActiveState('about')">X</p>
+
+
+            <div class="aboutordnung" id="margintop">
+                <p class="pnormal">Das ist eine Karte, wie ich Berlin kennenlerne. Von der Straße aus, von den Wegen, die ich zurücklege. Anfangs ein wenig überfordert von dem Verkehr und sehr fix genervt von der schlechten Radfahrinfrastruktur. Schnell gefällt mir das Radeln in Berlin und wie ich dadurch ein Gefühl für die Stadt bekomme. Nach vier Monaten fahre ich fixere Wege als dir mir Google Maps vorschlägt. Ich weiß, welche Ampel ewig nicht grün wird und  bei welcher man getrost auch bei rot rüber fahren kann. Ich kenn die nervige Kopfsteinpflasterstraßen und weiß bei welcher Bodenwelle man besser vom Sattel aufsteht.
+<br>
+                    Die Karte zeigt meine zurückgelegten Wege, die Fortbewegungsart und deren zeitliche Verortung. Sowie Auffälligkeiten, die auf meinen Strecken liegen und zu meiner Orientierung beigetragen haben.</p>
+            </div>
+        
+    
+
+            <div class="aboutordnung">
+            
+                <div class="aboutinlinetop"><p class="peffekt" id="margintop">Datenerhebung</p> 
+                    <p class="pnormal" >Alle dargestellten Daten wurden selbst generiert und erhoben. In dem Zeitraum vom 18. Oktober 2023 bis zum 10. Februar 2024 habe ich alle meine Bewegungsdaten aufgezeichnet. Dafür wurde die Funktion "timeline" von Google maps verwendet. Timeline speichert automtisch, sofern man ein mit Google verbundenes Gerät mit sich trägt, die zurückgelegte Strecke (Distanz in m), Datum, Start- und Endzeitpunkt, Fortbewegungsart, Besuchte Orte (Adressen), Kategorie der besuchten Orte (z.B. Supermarkt) sowie die Emaildresse des verbundenen Googlekontos. 
+                    <br> Die Wegmarker wurden in einer seperaten Liste gesammelt, die Auswahl passierte recht spontan und hatte nur dem Kriterium zu folgen, dass mir etwas häufiger beim Radfahren aufgefallen ist und zur Orreintierung beigetragen hat. Die Fotos wurde von mir, oft während der Fahrt, aufgenommen. 
+                    <br> Platten wurden analog erfasst und händisch in die Daten hinzugefügt.
+                </p>
+                
+                    <p class="peffekt" id="margintop">Methodik</p> 
+                    <p class="pnormal marginunten"> Gearbeitet wurde mit folgenden Tools: Google timeline, geojson.io, Mapbox, Leaflet, ChatGBT, html, css und JavaScript. Die Geodaten wurden Tageweise von Google timeline in kml Format exportiert. Mit geojson.io wurden diese in ein geojson formatiert (für mich war es einfacher damit im Code zu arbeiten) und zudem etwas nachkorrigiert, da Google timeline oft nicht genau der Straße folgt, sondern eine Luftlinie anzeigt.Auch die Platten wurden händisch hinzugefügt. Die Website wurde mit Helfercode durch ChatGBT erstellt (der Code wird durch prompts an eine KI generiert). Mit JavaScript werden die Geodaten dynamisch in die Website eingebunden und gezeigt.
+                        Die Karten wurden in Mapbox gestaltet und sind mittels Mapbox gl und leaftlet integriert.  </p>
+
+                    <p class="peffekt" id="margintop">auf dem Bike und hinter der Karte</p> 
+                 
+                 <p class="pnormal marginunten">Geradelt ist Laura. Ich bin immer gern auf dem Fahrrad unterwegs und seit Oktober 2023 auch in Berlin.
+                Das Projekt ist im Rahmen des Kurses "Mapping Stories" enstanden. Betreut von Nina Bender an der UdK im WS 23/24. Aufgabe war es eine Karte zu gestalten, die Orte in Berlin zeigt, an die man sich in 30 Jahren erinnern möchte.</p>
+
+                        <!-- <div class="geareinzeln marginunten" >
+                            <div class="gearimage-container-klein" >
+                                 <img class="gearimage" src="/bikebilder/ich.jpg" alt="">
+                             </div>  
+                            <div class="geartypo" id="hinterdembike"> <p class="pnormal">Geradelt ist Laura. Ich bin immer gern auf dem Fahrrad unterwegs und seit Oktober 2023 auch in Berlin.
+                                <br> Das Projekt ist im Rahmen des Kurses "Mapping Stories" enstanden. Betreut von Nina Bender an der UdK im WS 23/24. Aufgabe war es eine Karte zu gestalten, die Orte in Berlin zeigt an die man sich in 30 Jahren erinnern möchte </p> </div> 
+                         </div>
+                        </div>   -->
+                </div>
+                
+            </div>
+    </div>
+   
+    <div id="aboutgear" >
+        <p class="fettbutton nachrechts" onclick="toggleActiveState('aboutgear')">Ausrüstung</p> <p class="fettbutton rechterstop" onclick="toggleActiveState('aboutgear')">X</p>
+
+       
+
+            <div class="gearordnung" id="margintop">
+
+            <div class="geareinzeln" >
+               <div class="gearimage-container-hoch" >
+                    <img class="gearimage" src="/bikebilder/helmi07.jpg" alt="">
+                </div>  
+
+                <div class="geartypo"><p class="peffekt">der Helm</p> 
+                <p class="geardescription">Hab ich viel zu spät gelernt, aber jetzt weiß ich es: die coolen kids tragen Helme. </p> </div> 
+            </div>
+
+            <div class="geareinzeln" >
+                <div class="gearimage-container-quer" >
+                     <img class="gearimage" src="/bikebilder/handschuhe10.jpg" alt="">
+                 </div>  
+                <div class="geartypo"><p class="peffekt">die Handschuhe</p> 
+                <p class="geardescription">Wichtigstes Accessoire beim Radeln im Winter, denn mit kalten Fingern bringt es einfach keinen Spaß.</p> 
+            </div> 
+             </div>
+
+            <div class="geareinzeln" >
+                <div class="gearimage-container-hoch" >
+                     <img class="gearimage" src="/bikebilder/ruki07.jpg" alt="">
+                 </div>  
+                <div class="geartypo"><p class="peffekt">der Rucksack</p> 
+                <p class="geardescription">Ein schwarzes Loch auf dem Rücken. Meist etwas zu schwer. Immer Ursache für den Schweißrücken.</p> 
+            </div> 
+             </div>
+             
+
+            <div class="geareinzeln" >
+                <div class="gearimage-container-quer" >
+                     <img class="gearimage" src="/bikebilder/handyhand06.jpg" alt="">
+                 </div>  
+                <div class="geartypo"><p class="peffekt">die Handyhalterung</p> 
+                <p class="geardescription">Unverzeichtbar, wenn man sich nicht auskennt. Ist zwar wirklich shitti Qualität, aber es tut sein Job.</p> 
+            </div> 
+             </div>
+
+             <div class="geareinzeln" >
+                <div class="gearimage-container-hoch" >
+                     <img class="gearimage" src="/bikebilder/schloss12.jpg" alt="">
+                 </div>  
+                <div class="geartypo"><p class="peffekt">die Schlösser</p> 
+                <p class="geardescription">Ja, ich habe große Paranoia vor den Langfinger:innen in Belrin. Daher: doppelt hält besser. Fingerscrossed, dass es so bleibt.</p> 
+            </div> 
+             </div>
+
+
+             <div class="geareinzeln" >
+                <div class="gearimage-container-quer" >
+                     <img class="gearimage" src="/bikebilder/super10.jpg" alt="">
+                 </div>  
+                <div class="geartypo"><p class="peffekt">die Super Patches</p> 
+                <p class="geardescription">Flicken, vorgeklebt, nur noch den Schlauch anrauen und schon kann's wieder losgehen. Super. 
+                    <br> Eine ganze Packung hat mich Berlin bereits gekostet.</p> 
+            </div> 
+             </div>
+
+
+             <div class="geareinzeln" >
+                <div class="gearimage-container-hoch" >
+                     <img class="gearimage" src="/bikebilder/regi03.jpg" alt="">
+                 </div>  
+                <div class="geartypo"><p class="peffekt">die Regenhose</p> 
+                <p class="geardescription">Der Berliner Winter unterscheidet sich nicht zu sehr vom Kieler Winter: es ist grau, kalt und nass. Auch mit Schutzblechen wäre eine Regenhose ezenziell, um trocken anzukommen.</p> 
+            </div> 
+             </div>
+
+
+
+             <div class="geareinzeln" >
+                <div class="gearimage-container-quer" >
+                     <img class="gearimage" src="/bikebilder/bike03.jpg" alt="">
+                 </div>  
+                <div class="geartypo"><p class="peffekt">das Bike</p> 
+                <p class="geardescription">hot hot hot!</p> 
+            </div> 
+             </div>
+
+             <div class="geareinzeln" >
+                <div class="gearimage-container-hoch" >
+                     <img class="gearimage" src="/bikebilder/mfinger04.jpg" alt="">
+                 </div>  
+                <div class="geartypo"><p class="peffekt">der Mittelfinger</p> 
+                <p class="geardescription">Berlins Straßen sind tough. Vorrausschauend und rücksichtsvoll sein ist gut und meine bevorzugte Arte. Trotzdem: shitti Verhalten andere Verkehrsteilnehmer:innen soll nicht unkommentiert davon kommen.
+                    <br> Ne kleine Erinnerung an alle autofahrenden Personen, die das hier lesen: DO YOUR F**KING SCHULTERBLICK!!!</p> 
+            </div> 
+             </div>
+
+             <div class="geareinzeln" >
+                
+                <div class="geartypo"><p class="peffekt"></p> 
+               
+            </div> 
+             </div>
+
+             </div>
+
+             
+
+    </div>
+
+
+
+
+        <!-- Marquee Div -->
+       <div id="marqueeContainer">
+        <div class="pfett marqueeText"></div>
+        <div class="pfett marqueeText"></div>
+</div>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="generateButtons.js"></script>
+<script src="main.js"></script>
+
+</body>
+</html>
